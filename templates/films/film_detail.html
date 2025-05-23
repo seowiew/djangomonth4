@@ -1,0 +1,105 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ film.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/header_and_footer/menu.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header_and_footer/footer.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .film-details {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .film-header {
+            margin-bottom: 20px;
+        }
+        .film-content {
+            display: flex;
+            gap: 40px;
+        }
+        .info-text {
+            flex: 1;
+        }
+        .poster img {
+            max-width: 300px;
+            height: auto;
+            border-radius: 5px;
+        }
+        .trailer {
+            flex: 1;
+        }
+        .trailer iframe {
+            width: 100%;
+            height: 315px;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    {% include 'components/header.html' %}
+</header>
+
+<main>
+    <section class="film-details">
+        <h1 class="film-header">{{ film.title }}</h1>
+
+        <div class="film-content">
+            <div class="poster">
+                <img src="{{ film.image.url }}" alt="{{ film.title }}">
+            </div>
+
+            <div class="info-text">
+                <p><strong>Жанр:</strong> {{ film.genre }}</p>
+                <p><strong>Режиссер:</strong> {{ film.director }}</p>
+                <p><strong>Продолжительность:</strong> {{ film.duration }} минут</p>
+                <p><strong>Описание:</strong> {{ film.description }}</p>
+            </div>
+
+            <div class="trailer">
+                <h3>Трейлер</h3>
+                <iframe 
+                    src="{{ film.trailer_url }}"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </section>
+</main>
+
+<h2>Отзывы</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Оставить отзыв</button>
+</form>
+
+<ul>
+    {% for review in reviews %}
+        <li><strong>{{ review.user_name }}</strong>:<br>{{ review.text }}</li>
+    {% empty %}
+        <li>Отзывов пока нет.</li>
+    {% endfor %}
+</ul>
+
+<footer>
+    <p>&copy; 2025 Интернет Кинотеатр | Все права защищены</p>
+    <ul>
+        <li><a href="#">О нас</a></li>
+        <li><a href="#">Контакты</a></li>
+        <li><a href="#">Политика конфиденциальности</a></li>
+    </ul>
+</footer>
+</body>
+</html>

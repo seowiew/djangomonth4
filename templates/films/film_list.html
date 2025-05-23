@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Интернет Кинотеатр</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/header_and_footer/menu.css' %}">
+    <link rel="stylesheet" href="{% static 'css/film_and_film_detail/cards.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header_and_footer/footer.css' %}">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        footer {
+            background-color: #000;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        footer ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        footer ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="content">
+
+        <!-- Меню -->
+        <header>
+            {% include 'components/header.html' %}
+        </header>
+
+        <!-- Карточки фильмов -->
+        <section class="cards">
+            {% for film in films %}
+                <div class="card">
+                    <a href="{% url 'films:film_detail' film.id %}">
+                        <img src="{{ film.image.url }}" alt="{{ film.title }}">
+                        <h3>{{ film.title }}</h3>
+                        <p>{{ film.description }}</p>
+                    </a>
+                    <div class="card-buttons">
+                       <div class="card-buttons">
+                        <button class="edit"><a href="{% url 'films:film_update' film.id %}">Изменить</a></button>
+                        <button class="delete"><a href="{% url 'films:film_delete' film.id %}">Удалить</a></button>
+                        <a href="{% url 'films:film_create' %}" class="add-button">Добавить</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Фильмов пока нет.</p>
+            {% endfor %}
+        </section>
+
+    </div>
+
+    <!-- Футер -->
+    <footer>
+        <p>&copy; 2025 Интернет Кинотеатр | Все права защищены</p>
+        <ul>
+            <li><a href="#">О нас</a></li>
+            <li><a href="#">Контакты</a></li>
+            <li><a href="#">Политика конфиденциальности</a></li>
+        </ul>
+    </footer>
+</div>
+</body>
+</html>
