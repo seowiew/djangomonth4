@@ -1,56 +1,46 @@
 
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Film, Reviews
-from .forms import ReviewsForm, FilmForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.db.models import Q
+from django.urls import reverse_lazy
+from .models import Film
+from .forms import FilmForm
+from django.shortcuts import redirect, get_object_or_404, render
 
-def film_list(request):
-    films = Film.objects.all()
-    return render(request, 'films/film_list.html', {'films': films})
+class FilmListView(ListView):
+    model = Film
+    template_name = 'films/film_list.html'
+    context_object_name = 'films'
 
-def film_detail(request, id):
-    film = get_object_or_404(Film, id=id)
-    reviews = Reviews.objects.filter(films_choice=film).order_by('-id')
+class FilmDetailView(DetailView):
+    model = Film
+    template_name = 'films/film_detail.html'
+    context_object_name = 'film'
 
-    if request.method == 'POST':
-        form = ReviewsForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.films_choice = film
-            review.save()
-            form = ReviewsForm()
-    else:
-        form = ReviewsForm()
+class FilmCreateView(CreateView):
+    model = Film
+    form_class = FilmForm
+    template_name = 'films/film_create.html'
+    success_url = reverse_lazy('films:film_list')
 
-    context = {
-        'film': film,
-        'reviews': reviews,
-        'form': form,
-    }
-    return render(request, 'films/film_detail.html', context)
+class FilmUpdateView(UpdateView):
+    model = Film
+    form_class = FilmForm
+    template_name = 'films/film_update.html'
+    success_url = reverse_lazy('films:film_list')
 
-def film_create(request):
-    if request.method == 'POST':
-        form = FilmForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('films:film_list')
-    else:
-        form = FilmForm()
-    return render(request, 'films/film_create.html', {'form': form})
+class FilmDeleteView(DeleteView):
+    def get(self, request, id):
+        film = get_object_or_404(Film, id=id)
+        film.delete()
+        return redirect('films:film_list')
+    
+class FilmSearchView(ListView):
+    model = Film
+    template_name = 'films/film_search.html'  
+    context_object_name = 'films'
 
-def film_update(request, id):
-    film = get_object_or_404(Film, id=id)
-    if request.method == 'POST':
-        form = FilmForm(request.POST, request.FILES, instance=film)
-        if form.is_valid():
-            form.save()
-            return redirect('films:film_detail', id=film.id)
-    else:
-        form = FilmForm(instance=film)
-    return render(request, 'films/film_update.html', {'form': form})
-
-
-def film_delete(request, id):
-    film = get_object_or_404(Film, id=id)
-    film.delete()
-    return redirect('films:film_list')
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Film.objects.filter(Q(title__icontains=query))
+        return Film.objects.none()  

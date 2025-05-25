@@ -1,12 +1,20 @@
 from django.urls import path
-from . import views
+from .views import (
+    FilmListView,
+    FilmDetailView,
+    FilmCreateView,
+    FilmUpdateView,
+    FilmDeleteView,
+    FilmSearchView
+)
 
 app_name = 'films'
 
 urlpatterns = [
-    path('', views.film_list, name='film_list'),
-    path('<int:id>/', views.film_detail, name='film_detail'),
-    path('create/', views.film_create, name='film_create'),
-    path('<int:id>/edit/', views.film_update, name='film_update'),
-    path('<int:id>/delete/', views.film_delete, name='film_delete'),
+    path('', FilmListView.as_view(), name='film_list'),
+    path('<int:pk>/', FilmDetailView.as_view(), name='film_detail'),
+    path('create/', FilmCreateView.as_view(), name='film_create'),
+    path('<int:pk>/update/', FilmUpdateView.as_view(), name='film_update'),
+    path('<int:pk>/delete/', FilmDeleteView.as_view(), name='film_delete'),
+    path('search/', FilmSearchView.as_view(), name='film_search' ),
 ]
