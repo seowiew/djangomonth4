@@ -10,11 +10,18 @@ class FilmListView(ListView):
     model = Film
     template_name = 'films/film_list.html'
     context_object_name = 'films'
+    paginate_by = 3
 
 class FilmDetailView(DetailView):
     model = Film
     template_name = 'films/film_detail.html'
     context_object_name = 'film'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        obj.views_count += 1
+        obj.save(update_fields=['views_count'])  
+        return obj
 
 class FilmCreateView(CreateView):
     model = Film

@@ -7,6 +7,7 @@ class Film(models.Model):
     description = models.TextField("Описание")
     image = models.ImageField("Постер", upload_to='films/')
     trailer_url = models.URLField("Ссылка на трейлер")
+    views_count = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = "Фильм"

@@ -21,6 +21,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,6 +32,22 @@ INSTALLED_APPS = [
     'films',
     'users',
 ]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Мой Кинотеатр Админка",
+    "site_header": "Админка Кинотеатра",
+    "site_brand": "Кинотеатр",
+    "show_ui_builder": True,  # Включить визуальный конструктор
+    "welcome_sign": "Добро пожаловать в панель управления!",
+    "copyright": "2025 © Интернет Кинотеатр",
+    "search_model": "films.film",  # пример — что искать из моделей
+    "topmenu_links": [
+        {"name": "Главная",  "url": "/", "permissions": ["auth.view_user"]},
+        {"model": "auth.user"},
+        {"app": "films"},
+    ],
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
