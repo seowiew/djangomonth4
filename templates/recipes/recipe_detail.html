@@ -1,0 +1,15 @@
+
+<h1>{{ object.title }}</h1>
+<p>{{ object.description }}</p>
+
+<h3>Ингредиенты:</h3>
+<ul>
+  {% for ingredient in object.ingredients.all %}
+    <li>{{ ingredient.name }} - {{ ingredient.quantity }}</li>
+  {% empty %}
+    <li>Ингредиентов нет</li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'recipes:ingredient_create' object.pk %}">Добавить ингредиент</a>
+<a href="{% url 'recipes:recipe_list' %}">Назад</a>

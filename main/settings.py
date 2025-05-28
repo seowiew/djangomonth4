@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'first_home_work',
     'films',
     'users',
+    'recipes',
 ]
 
 JAZZMIN_SETTINGS = {

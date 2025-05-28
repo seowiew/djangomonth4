@@ -1,0 +1,7 @@
+<h1>Удалить рецепт</h1>
+<form method="post">
+  {% csrf_token %}
+  <p>Удалить рецепт "{{ object.title }}"?</p>
+  <button type="submit">Да</button>
+</form>
+<a href="{% url 'recipes:recipe_list' %}">Отмена</a>
